@@ -75,6 +75,11 @@ class Requirejs_ext {
 
     public function load_js()
     {
+
+        //Load the RequireJS script early
+        $js1 = "<script src='".URL_THIRD_THEMES."requirejs/javascript/require.js' type='text/javascript'></script>";
+
+
         $scripts = Requirejs::queue();
 
 
@@ -93,9 +98,8 @@ class Requirejs_ext {
             $str = substr($str, 0, strlen($str)-2);
         }
         
-        //Include RequireJS Script and configure
-        $js = "
-<script src='".URL_THIRD_THEMES."requirejs/javascript/require.js' type='text/javascript'></script>
+        //Include configure RequireJS and concatenate callbacks
+        $js2 = "
 <script type=\"text/javascript\">
     require.config({
         baseUrl: '".base_url()."',
@@ -112,29 +116,29 @@ class Requirejs_ext {
     foreach ($scripts as $script) {
         if($script['callback']){
             if($script['deps']){
-                $js .= "\n\n //Callback for script: ".$script['deps']."\n";    
+                $js2 .= "\n\n //Callback for script: ".$script['deps']."\n";    
             } else {
                 foreach ($script['deps'] as $scrpt) {
-                    $js .= "\n\n //Callback for scripts: \n";
-                    $js .= "   - $scrpt \n";
+                    $js2 .= "\n\n //Callback for scripts: \n";
+                    $js2 .= "   - $scrpt \n";
                 }
                 
             }
-            $js .= "\n";
-            $js .= $script['callback'];
-            $js .= "\n";
+            $js2 .= "\n";
+            $js2 .= $script['callback'];
+            $js2 .= "\n";
             
         }
     }
 
 
-        $js .= "
+        $js2 .= "
     });
 
 </script>
 ";
 
-        $this->EE->output->final_output = str_replace("</head>", $js."\n\n</head>", $this->EE->output->final_output);
+        $this->EE->output->final_output = str_replace(array("</title>", "</head>"), array("</title>\n\n".$js1."\n", $js2."\n\n</head>"), $this->EE->output->final_output);
     }
 
 
