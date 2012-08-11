@@ -1,7 +1,7 @@
-# RequireJS-for-EE
+# RequireJS for ExpressionEngine
 ====================
 
-Extension that loads RequireJS early into the ExpressionEngine CP and makes it available via a PHP API to all addon types throughout the entire Control Panel.
+This extension loads [RequireJS](http://requirejs.org) early into the ExpressionEngine CP and makes it available via a PHP API to all addon types throughout the entire Control Panel.
 
 RequireJS is an asynchronous JavaScript file and module loader.  Using RequireJS to load JavaScript assets in your addons can drastically improve the Control Panel performance since the assets are loaded in parallel as well as in a manner that does not block the main browser UI.  
 
