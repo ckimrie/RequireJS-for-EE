@@ -18,6 +18,7 @@ RequireJS exposes a PHP API that is attached to the ExpressionEngine instance.  
 The API will collect all the script load calls for all addons system wide and then load them in parallel before firing your callbacks.  All URLs are relative to the EE "themes" folder.
 
 ```php
+<?php
 //API is attached to the EE global instance, so fetch it if necessary
 $this->EE =& get_instance();
 
