@@ -67,6 +67,10 @@ class Requirejs_ext {
 
         //Attach the RequireJS model to the singleton to act as the API
         $this->EE->load->model('requirejs', null, "requirejs");   
+
+
+
+        
     }
 
 
@@ -81,17 +85,16 @@ class Requirejs_ext {
 
 
         $scripts = Requirejs::queue();
+        $shims = Requirejs::shimQueue();
 
 
         $str = "";
         foreach ($scripts as $script) {
-            if(!is_array($script['deps'])) {
-                $str .= "'".$script['deps']."', ";
-            } else {
-                foreach ($script['deps'] as $scrpt) {
-                    $str .= "'$scrpt', ";
-                }
+   
+            foreach ($script['deps'] as $scrpt) {
+                $str .= $this->_formatUrl($scrpt).", ";
             }
+        
         }
 
         if(strlen($str) > 0){
@@ -102,9 +105,20 @@ class Requirejs_ext {
         $js2 = "
 <script type=\"text/javascript\">
     require.config({
-        baseUrl: '".base_url()."',
+        baseUrl: '".URL_THIRD_THEMES."../',
         paths: {
-            'themes' : '".URL_THIRD_THEMES."../'
+            'URL_THIRD_THEMES' : '".URL_THIRD_THEMES."'
+        },
+        shim: {
+            ";
+            
+        foreach ($shims as $shim) {
+            $js2 .= "'".$shim['script']."' : ['".implode("', ", $shim['deps'])."'],";
+        }
+        $js2 = substr($js2, 0, strlen($js2)-1);
+
+
+        $js2 .= "
         }
     });
 
@@ -115,15 +129,12 @@ class Requirejs_ext {
     //Script Callbacks
     foreach ($scripts as $script) {
         if($script['callback']){
-            if($script['deps']){
-                $js2 .= "\n\n //Callback for script: ".$script['deps']."\n";    
-            } else {
-                foreach ($script['deps'] as $scrpt) {
-                    $js2 .= "\n\n //Callback for scripts: \n";
-                    $js2 .= "   - $scrpt \n";
-                }
-                
+            $js2 .= "\n\n // Callback for script: \n";
+            foreach ($script['deps'] as $scrpt) {
+                $js2 .= " // - $scrpt \n";
             }
+            
+        
             $js2 .= "\n";
             $js2 .= $script['callback'];
             $js2 .= "\n";
@@ -142,6 +153,37 @@ class Requirejs_ext {
     }
 
 
+
+    /**
+     * Script URL Formatting
+     * 
+     * If requireJS loads a regular script.js file, then it ignore the baseUrl.  RequireJS dictates that we
+     * should use the require.toUrl() method to convert a regular .js script address to on relative to baseUrl.
+     * For convenience in the PHP API, lets hide this need from the user.
+     * 
+     * @param  string $fullUrl  URL to the script (or CSS, HTML etc)
+     * @return string           Modified script address
+     */
+    public function _formatUrl($fullUrl='')
+    {
+        $parts = explode("!", $fullUrl);
+        $url = $fullUrl;
+        $plugin = "'";
+
+        if(count($parts) > 1){
+            $url = $parts[1];
+            $plugin = "'".$parts[0]."!";
+        }
+        
+        if(substr($url, -3) == ".js" || substr($url, 0, 4) == "http" || substr($url, 0, 1) == "/") {
+            $url = "' + require.toUrl('".$url."')";
+        } else {
+            $url = $url."'";
+        }
+
+        
+        return $plugin.$url;
+    }
 
 
 

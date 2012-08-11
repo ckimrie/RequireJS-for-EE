@@ -7,7 +7,8 @@
 class Requirejs extends CI_Model
 {
 	
-	private static $_scripts = array();
+	private static $_scripts 	= array();
+	private static $_shims 		= array();
 
 
 
@@ -30,6 +31,9 @@ class Requirejs extends CI_Model
 		/**
 		 * TODO: Validate JS filename
 		 */
+		if(!is_array($script)){
+			$script = array($script);
+		}
 
 		Requirejs::$_scripts[] = array(
 			"deps" => $script,
@@ -37,9 +41,34 @@ class Requirejs extends CI_Model
 		);
 	}
 
+
+	static function shim($script='', $deps=array(), $auto_add = TRUE)
+	{
+		/**
+		 * TODO: Validate JS filename
+		 */
+
+		if(!is_array($deps)){
+			$deps = array($deps);
+		}
+
+		Requirejs::$_shims[] = array(
+			"script" => $script,
+			"deps" => $deps
+		);
+
+		Requirejs::load($script);
+	}
+
 	static function queue()
 	{
 		return Requirejs::$_scripts;
+	}
+
+
+	static function shimQueue()
+	{
+		return Requirejs::$_shims;
 	}
 }
 
