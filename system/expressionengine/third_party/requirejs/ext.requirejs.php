@@ -31,8 +31,8 @@ class Requirejs_ext {
     /**
      * Attatch RequireJS API to EE global object
      * 
-     * Using CI Hooks is the only way that we can reliably ensure that our load_js method is 
-     * the LAST, since extensions, modules, fieltypes and accessories can all potentially add
+     * Using CI Hooks is the only way that we can reliably ensure that our _requirejs_init method is 
+     * called LAST since extensions, modules, fieltypes and accessories can all potentially add
      * to the RequireJS queue
      * 
      * @param  object   $Session      Session instance
