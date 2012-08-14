@@ -113,7 +113,7 @@ class Requirejs_ext {
             ";
             
         foreach ($shims as $shim) {
-            $js2 .= "'".$shim['script']."' : ['".implode("', ", $shim['deps'])."'],";
+            $js2 .= "'".$shim['script']."' : ['".implode("', '", $shim['deps'])."'],";
         }
         $js2 = substr($js2, 0, strlen($js2)-1);
 
