@@ -1,0 +1,3 @@
+[submodule "themes/third_party/requirejs/javascript/plugins/text"]
+	path = themes/third_party/requirejs/javascript/plugins/text
+	url = https://github.com/requirejs/text.git
