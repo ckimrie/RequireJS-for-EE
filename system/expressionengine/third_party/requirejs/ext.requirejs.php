@@ -107,9 +107,10 @@ class Requirejs_ext {
     require.config({
         baseUrl: '".URL_THIRD_THEMES."../',
         paths: {
-            'URL_THIRD_THEMES' : '".URL_THIRD_THEMES."',
-            'css' : '".URL_THIRD_THEMES."requirejs/javascript/plugins/css/css.min',
-            'text' : '".URL_THIRD_THEMES."requirejs/javascript/plugins/text/text'
+            'URL_THIRD_THEMES'  : '".URL_THIRD_THEMES."',
+            'css'               : '".URL_THIRD_THEMES."requirejs/javascript/plugins/css/css.min',
+            'text'              : '".URL_THIRD_THEMES."requirejs/javascript/plugins/text/text',
+            'jquery'            : '".URL_THIRD_THEMES."../javascript/compressed/jquery/jquery'
         },
         shim: {
             ";
