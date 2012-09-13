@@ -25,6 +25,9 @@ $this->EE =& get_instance();
 //Load a JS file, relative to themes folder
 $this->EE->requirejs->add("third_party/mymodule/filename.js");
 
+//Alternate shorthand syntax
+Requirejs::load("third_party/mymodule/filename.js");
+
 //Load multiple JS files in parallel, relative to themes folder
 $this->EE->requirejs->add(array("third_party/mymodule/filename1.js", "third_party/mymodule/filename2.js"));
 
@@ -59,4 +62,40 @@ require(["third_party/mymodule/filename1", "third_party/mymodule/filename2"], fu
 });
 ```
 
+## Loader Plugins
 
+RequireJS supports loader plugins that certain files other than javascript to be loaded.  RequireJS-for-EE includes the following plugins
+
+### CSS 
+
+Loads CSS files and automatically inserts it into the page DOM as a link tag.  Simply prepend "css!" when specifying CSS resources:
+
+Javascript:
+```javascript
+require(['css!themes/third_party/mymodule/css/styles.css'], function(){
+	// Code here will run when CSS has loaded
+});
+```
+
+PHP:
+```php
+<?php
+$this->EE->requirejs->add("css!themes/third_party/mymodule/css/styles.css");
+```
+
+### Text
+
+Loads text files (useful for loading HTML templates).  Simply prepend "text!" when specifying text resources:
+
+Javascript:
+```javascript
+require(['text!themes/third_party/mymodule/templates/fragment.html'], function(){
+	// Code here will run when CSS has loaded
+});
+```
+
+PHP:
+```php
+<?php
+$this->EE->requirejs->add("text!themes/third_party/mymodule/templates/fragment.html");
+```
