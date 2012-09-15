@@ -5,7 +5,7 @@ class Requirejs_ext {
     var $EE;
 
     var $name           = 'RequireJS for EE';
-    var $version        = '1.0';
+    var $version        = '1.2';
     var $description    = 'Loads RequireJS in the CP for use by other addons.';
     var $settings_exist = 'n';
     var $docs_url       = '';
