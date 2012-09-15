@@ -79,6 +79,11 @@ class Requirejs_ext {
 
     public function load_js()
     {
+        $scripts = Requirejs::queue();
+        $shims = Requirejs::shimQueue();
+
+        //No scripts to load? Bailout.
+        if(count($scripts) == 0 && count($shims) == 0) return;
 
         //Load the RequireJS script early
         $js1 = "<script src='".URL_THIRD_THEMES."requirejs/javascript/require.js' type='text/javascript'></script>";
