@@ -3,7 +3,7 @@
 
 This extension loads [RequireJS](http://requirejs.org) early into the ExpressionEngine CP and makes it available via a PHP API to all addon types throughout the entire Control Panel.
 
-RequireJS is an asynchronous JavaScript file and module loader.  Using RequireJS to load JavaScript assets in your addons can drastically improve the Control Panel performance since the assets are loaded in parallel as well as in a manner that does not block the main browser UI.  
+RequireJS is an asynchronous JavaScript file and module loader.  Using RequireJS to load JavaScript assets in your addons can drastically improve the Control Panel performance since the assets are loaded in parallel as well as in a manner that does not block the main browser UI.
 
 The result is a faster ExpressionEngine Control Panel that everyone can enjoy.
 
@@ -13,7 +13,7 @@ The result is a faster ExpressionEngine Control Panel that everyone can enjoy.
 
 ### PHP
 
-RequireJS exposes a PHP API that is attached to the ExpressionEngine instance.  This means that any part of your addon can load needed JavaScript resources in a standardised asynchronous manner that will not slow down the CP load.  
+RequireJS exposes a PHP API that is attached to the ExpressionEngine instance.  This means that any part of your addon can load needed JavaScript resources in a standardised asynchronous manner that will not slow down the CP load.
 
 The API will collect all the script load calls for all addons system wide and then load them in parallel before firing your callbacks.  All URLs are relative to the EE "themes" folder.
 
@@ -66,7 +66,7 @@ require(["third_party/mymodule/filename1", "third_party/mymodule/filename2"], fu
 
 RequireJS supports loader plugins that certain files other than javascript to be loaded.  RequireJS-for-EE includes the following plugins
 
-### CSS 
+### CSS
 
 Loads CSS files and automatically inserts it into the page DOM as a link tag.  Simply prepend "css!" when specifying CSS resources:
 
@@ -99,3 +99,8 @@ PHP:
 <?php
 $this->EE->requirejs->add("text!themes/third_party/mymodule/templates/fragment.html");
 ```
+
+## License
+==========
+
+See LICENSE file.
