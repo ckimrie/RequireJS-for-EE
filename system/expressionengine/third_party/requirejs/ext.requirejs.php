@@ -42,35 +42,45 @@ class Requirejs_ext {
     {
         global $EXT;
 
-
         //If this request is a JS or AJAX call, dont bother to load require.  We want CP page loads only
         if($this->EE->input->get("C") == "javascript"){
             return;
         }
 
+        //Load our modified core Hooks class
+        $this->EE->load->file(APPPATH . "third_party/requirejs/core/RJS_Hooks.php");
+
+        //We overwrite the CI_Hooks class with our own since the CI_Hooks class will always load
+        //hooks class files relative to APPPATH, when what we really need is to load RequireJS hook from the
+        //themes folder, which we KNOW can always be found with PATH_THIRD. Hence we extend the class and
+        //simply redefine the _run_hook method to load relative to PATH_THIRD. Simples.
+        $RJS_EXT = new RJS_Hooks();
+
+        //Capture existing hooks just in case (although this is EE - it's unlikely)
+        $RJS_EXT->hooks = $EXT->hooks;
+
         //Enable CI Hooks
-        $EXT->enabled = TRUE;
+        $RJS_EXT->enabled = TRUE;
 
         //Create the post_controller hook array if needed
-        if(!isset($EXT->hooks['post_controller'])){
-            $EXT->hooks['post_controller'] = array();
+        if(!isset($RJS_EXT->hooks['post_controller'])){
+            $RJS_EXT->hooks['post_controller'] = array();
         }
 
         //Add our hook
-        $EXT->hooks['post_controller'][] = array(
+        $RJS_EXT->hooks['post_controller'][] = array(
             'class'    => 'Requirejs_ext',
             'function' => 'load_js',
             'filename' => 'ext.requirejs.php',
-            'filepath' => "third_party/requirejs/",
+            'filepath' => "third_party/requirejs" ,
             'params'   => array()
         );
 
+        //Overwrite the global CI_Hooks instance with our modified version
+        $EXT = $RJS_EXT;
+
         //Attach the RequireJS model to the singleton to act as the API
-        $this->EE->load->model('requirejs', null, "requirejs");   
-
-
-
-        
+        $this->EE->load->model('requirejs', null, "requirejs");
     }
 
 
