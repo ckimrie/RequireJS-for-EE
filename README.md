@@ -104,3 +104,10 @@ $this->EE->requirejs->add("text!themes/third_party/mymodule/templates/fragment.h
 ==========
 
 See LICENSE file.
+
+
+## Change Log
+=============
+
+- *1.3* - Added compatibility with FocusLab's EE Master Config setup, which allows third_party folder to moved outside of the system folder.
+- *1.2* - Public Release.
