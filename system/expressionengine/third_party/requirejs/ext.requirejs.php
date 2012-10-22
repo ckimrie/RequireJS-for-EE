@@ -48,11 +48,11 @@ class Requirejs_ext {
         }
 
         //Load our modified core Hooks class
-        $this->EE->load->file(APPPATH . "third_party/requirejs/core/RJS_Hooks.php");
+        $this->EE->load->file(PATH_THIRD . "requirejs/core/RJS_Hooks.php");
 
         //We overwrite the CI_Hooks class with our own since the CI_Hooks class will always load
         //hooks class files relative to APPPATH, when what we really need is to load RequireJS hook from the
-        //themes folder, which we KNOW can always be found with PATH_THIRD. Hence we extend the class and
+        //third_party folder, which we KNOW can always be found with PATH_THIRD. Hence we extend the class and
         //simply redefine the _run_hook method to load relative to PATH_THIRD. Simples.
         $RJS_EXT = new RJS_Hooks();
 
@@ -72,7 +72,7 @@ class Requirejs_ext {
             'class'    => 'Requirejs_ext',
             'function' => 'load_js',
             'filename' => 'ext.requirejs.php',
-            'filepath' => "third_party/requirejs" ,
+            'filepath' => "requirejs" ,
             'params'   => array()
         );
 

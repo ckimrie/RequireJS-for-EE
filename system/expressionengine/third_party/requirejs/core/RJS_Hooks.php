@@ -37,9 +37,9 @@ class RJS_Hooks extends CI_Hooks {
             return FALSE;
         }
 
-        $filepath = APPPATH.$data['filepath'].'/'.$data['filename'];
+        $filepath = PATH_THIRD.$data['filepath'].'/'.$data['filename'];
 
-        var_dump($filepath);
+
 
         if ( ! file_exists($filepath))
         {
