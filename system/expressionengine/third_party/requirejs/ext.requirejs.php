@@ -22,7 +22,14 @@ class Requirejs_ext {
     function __construct($settings = '')
     {
         $this->EE =& get_instance();
-
+        
+        if(!isset($this->EE->theme_loader))
+        {
+        	$this->EE->load->library('theme_loader');
+        }
+        
+        $this->EE->theme_loader->module_name = 'requirejs';
+        
         $this->settings = $settings;
     }
 
@@ -90,46 +97,46 @@ class Requirejs_ext {
     public function load_js()
     {
         $scripts = Requirejs::queue();
-        $shims = Requirejs::shimQueue();
+        $shims   = Requirejs::shimQueue();
 
         //No scripts to load? Bailout.
         if(count($scripts) == 0 && count($shims) == 0) return;
-
+        
         //Load the RequireJS script early
-        $js1 = "<script src='".URL_THIRD_THEMES."requirejs/javascript/require.js' type='text/javascript'></script>";
-
+        $js1 = "<script src='".$this->EE->theme_loader->theme_url()."requirejs/javascript/require.js' type='text/javascript'></script>";
 
         $scripts = Requirejs::queue();
-        $shims = Requirejs::shimQueue();
-
-
-        $str = "";
-        foreach ($scripts as $script) {
-   
-            foreach ($script['deps'] as $scrpt) {
-                $str .= $this->_formatUrl($scrpt).", ";
+        $shims   = Requirejs::shimQueue();
+        
+        $str     = array();
+        
+        foreach ($scripts as $script)
+        {
+            foreach ($script['deps'] as $scrpt)
+            {
+                $str[] = $this->_formatUrl($scrpt);
             }
-        
         }
+        
+        $str = implode(', ', $str);
 
-        if(strlen($str) > 0){
-            $str = substr($str, 0, strlen($str)-2);
-        }
-        
         //Include configure RequireJS and concatenate callbacks
         $js2 = "
 <script type=\"text/javascript\">
     require.config({
-        baseUrl: '".URL_THIRD_THEMES."../',
+        baseUrl: '".$this->EE->theme_loader->theme_url()."',
         paths: {
-            'URL_THIRD_THEMES'  : '".URL_THIRD_THEMES."',
-            'css'               : '".URL_THIRD_THEMES."requirejs/javascript/plugins/css/css.min',
-            'text'              : '".URL_THIRD_THEMES."requirejs/javascript/plugins/text/text',
-            'jquery'            : '".URL_THIRD_THEMES."../javascript/compressed/jquery/jquery'
+            'URL_THIRD_THEMES'  : '".$this->EE->theme_loader->theme_url()."',
+            'css'               : '".$this->EE->theme_loader->theme_url()."requirejs/javascript/plugins/css/css.min',
+            'text'              : '".$this->EE->theme_loader->theme_url()."requirejs/javascript/plugins/text/text',
+            'jquery'            : '".$this->EE->theme_loader->theme_url(FALSE, 'javascript/compressed/jquery/jquery')."'
         },
         shim: {
             ";
             
+         
+        $shim_str = array();
+        
         foreach ($shims as $shim) {
             $js2 .= "'".$shim['script']."' : ['".implode("', '", $shim['deps'])."'],";
         }
@@ -166,8 +173,8 @@ class Requirejs_ext {
 
 </script>
 ";
-
         $this->EE->output->final_output = str_replace(array("</title>", "</head>"), array("</title>\n\n".$js1."\n", $js2."\n\n</head>"), $this->EE->output->final_output);
+        
     }
 
 
