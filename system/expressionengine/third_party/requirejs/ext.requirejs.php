@@ -5,7 +5,7 @@ class Requirejs_ext {
     var $EE;
 
     var $name           = 'RequireJS for EE';
-    var $version        = '1.3';
+    var $version        = '1.4';
     var $description    = 'Loads RequireJS in the CP for use by other addons.';
     var $settings_exist = 'n';
     var $docs_url       = '';
@@ -90,6 +90,7 @@ class Requirejs_ext {
 
         //Attach the RequireJS model to the singleton to act as the API
         $this->EE->load->library('requirejs');
+        $this->EE->requirejs->version = $this->version;
     }
 
 

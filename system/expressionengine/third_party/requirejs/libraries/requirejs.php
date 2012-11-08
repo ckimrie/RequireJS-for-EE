@@ -6,6 +6,11 @@
 */
 class Requirejs
 {
+	/**
+	 * Extension version
+	 * @var string
+	 */
+	public $version;
 
 	/**
 	 * AMD script queue
