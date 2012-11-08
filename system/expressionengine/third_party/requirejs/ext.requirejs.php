@@ -89,7 +89,7 @@ class Requirejs_ext {
         $EXT = $RJS_EXT;
 
         //Attach the RequireJS model to the singleton to act as the API
-        $this->EE->load->model('requirejs', null, "requirejs");
+        $this->EE->load->library('requirejs');
     }
 
 

@@ -4,7 +4,7 @@
 /**
 *
 */
-class Requirejs extends CI_Model
+class Requirejs
 {
 
 	/**
@@ -24,12 +24,6 @@ class Requirejs extends CI_Model
 	 * @var array
 	 */
 	private static $_callbacks  = array();
-
-
-	function __construct()
-	{
-		parent::__construct();
-	}
 
 
 	/**
