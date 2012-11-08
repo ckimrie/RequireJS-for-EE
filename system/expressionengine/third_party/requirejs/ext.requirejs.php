@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 class Requirejs_ext {
@@ -22,14 +22,14 @@ class Requirejs_ext {
     function __construct($settings = '')
     {
         $this->EE =& get_instance();
-        
+
         if(!isset($this->EE->theme_loader))
         {
         	$this->EE->load->library('theme_loader');
         }
-        
+
         $this->EE->theme_loader->module_name = 'requirejs';
-        
+
         $this->settings = $settings;
     }
 
@@ -37,13 +37,15 @@ class Requirejs_ext {
 
     /**
      * Attatch RequireJS API to EE global object
-     * 
-     * Using CI Hooks is the only way that we can reliably ensure that our _requirejs_init method is 
+     *
+     * Using CI Hooks is the only way that we can reliably ensure that our _requirejs_init method is
      * called LAST since extensions, modules, fieltypes and accessories can all potentially add
      * to the RequireJS queue
-     * 
+     *
+     * @author Christopher Imrie
+     *
      * @param  object   $Session      Session instance
-     * @return null          
+     * @return null
      */
     public function _requirejs_init($Session)
     {
@@ -93,24 +95,33 @@ class Requirejs_ext {
 
 
 
-
+    /**
+     * Add the JS in the page HTML
+     *
+     * This method is fired after the application controller, and we use this
+     * opportunity to inject our script tag into the HTML
+     *
+     * @author Christopher Imrie
+     *
+     * @return null
+     */
     public function load_js()
     {
         $scripts   = Requirejs::queue();
         $shims     = Requirejs::shimQueue();
         $callbacks = Requirejs::callbacks();
-        
+
         //No scripts to load? Bailout.
         if(count($scripts) == 0 && count($shims) == 0) return;
-        
+
         //Load the RequireJS script early
         $js1 = "<script src='".$this->EE->theme_loader->theme_url()."requirejs/javascript/require.js' type='text/javascript'></script>";
 
         $scripts = Requirejs::queue();
         $shims   = Requirejs::shimQueue();
-        
+
         $str     = array();
-        
+
         foreach ($scripts as $script)
         {
             foreach ($script['deps'] as $scrpt)
@@ -118,7 +129,7 @@ class Requirejs_ext {
                 $str[] = $this->_formatUrl($scrpt);
             }
         }
-        
+
         $str = implode(', ', $str);
 
         //Include configure RequireJS and concatenate callbacks
@@ -134,10 +145,10 @@ class Requirejs_ext {
         },
         shim: {
             ";
-            
-         
+
+
         $shim_str = array();
-        
+
         foreach ($shims as $shim) {
             $js2 .= "'".$shim['script']."' : ['".implode("', '", $shim['deps'])."'],";
         }
@@ -159,15 +170,15 @@ class Requirejs_ext {
             foreach ($script['deps'] as $scrpt) {
                 $js2 .= " // - $scrpt \n";
             }
-            
-        
+
+
             $js2 .= "\n";
             $js2 .= $script['callback'];
             $js2 .= "\n";
-            
+
         }
     }
-    	
+
     	$js2 .= implode("\n\r", $callbacks);
         $js2 .= "
     });
@@ -175,18 +186,20 @@ class Requirejs_ext {
 </script>
 ";
         $this->EE->output->final_output = str_replace(array("</title>", "</head>"), array("</title>\n\n".$js1."\n", $js2."\n\n</head>"), $this->EE->output->final_output);
-        
+
     }
 
 
 
     /**
      * Script URL Formatting
-     * 
+     *
      * If requireJS loads a regular script.js file, then it ignore the baseUrl.  RequireJS dictates that we
      * should use the require.toUrl() method to convert a regular .js script address to on relative to baseUrl.
      * For convenience in the PHP API, lets hide this need from the user.
-     * 
+     *
+     * @author Christopher Imrie
+     *
      * @param  string $fullUrl  URL to the script (or CSS, HTML etc)
      * @return string           Modified script address
      */
@@ -200,14 +213,14 @@ class Requirejs_ext {
             $url = $parts[1];
             $plugin = "'".$parts[0]."!";
         }
-        
+
         if(substr($url, -3) == ".js" || substr($url, 0, 4) == "http" || substr($url, 0, 1) == "/") {
             $url = "' + require.toUrl('".$url."')";
         } else {
             $url = $url."'";
         }
 
-        
+
         return $plugin.$url;
     }
 
