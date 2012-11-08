@@ -96,9 +96,10 @@ class Requirejs_ext {
 
     public function load_js()
     {
-        $scripts = Requirejs::queue();
-        $shims   = Requirejs::shimQueue();
-
+        $scripts   = Requirejs::queue();
+        $shims     = Requirejs::shimQueue();
+        $callbacks = Requirejs::callbacks();
+        
         //No scripts to load? Bailout.
         if(count($scripts) == 0 && count($shims) == 0) return;
         
@@ -166,8 +167,8 @@ class Requirejs_ext {
             
         }
     }
-
-
+    	
+    	$js2 .= implode("\n\r", $callbacks);
         $js2 .= "
     });
 

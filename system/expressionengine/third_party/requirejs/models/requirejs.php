@@ -9,7 +9,7 @@ class Requirejs extends CI_Model
 	
 	private static $_scripts 	= array();
 	private static $_shims 		= array();
-
+	private static $_callbacks  = array();
 
 
 	function __construct()
@@ -60,6 +60,19 @@ class Requirejs extends CI_Model
 		Requirejs::load($script);
 	}
 
+	
+	static function callback($callback = '')
+	{
+		Requirejs::$_callbacks[] = $callback;
+	}
+	
+	
+	static function callbacks()
+	{
+		return Requirejs::$_callbacks;
+	}
+
+	
 	static function queue()
 	{
 		return Requirejs::$_scripts;
@@ -70,5 +83,6 @@ class Requirejs extends CI_Model
 	{
 		return Requirejs::$_shims;
 	}
+	
 }
 

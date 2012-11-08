@@ -12,8 +12,8 @@
  * @author		Justin Kimbrell
  * @copyright	Copyright (c) 2011, Justin Kimbrell
  * @link 		http://www.objectivehtml.com/libraries/channel_data
- * @version		1.3.0
- * @build		20121106
+ * @version		1.3.1
+ * @build		20121107
  */
  
 if(!class_exists('Theme_loader'))
@@ -183,7 +183,7 @@ if(!class_exists('Theme_loader'))
 		 * @return	string
 		 */
 		
-		public function javascript($file)
+		public function javascript($file, $callback = FALSE)
 		{
 			$file = $this->prep_url($this->js_directory, $file, $this->js_ext);
 			
@@ -191,17 +191,27 @@ if(!class_exists('Theme_loader'))
 			{
 				$this->loaded_files[] = $file;
 			
-				if($this->requirejs && isset($this->EE->requirejs))
+				if($this->requirejs())
 				{
-					$file = str_replace(array($this->theme_url(), '.js'), '', $file);
+					if(preg_match("/^".str_replace('/', '\/', $this->theme_url())."/", $file))
+					{
+						$file = preg_replace("/.js$/", '', $file);	
+					}
 					
-					$this->EE->requirejs->add($file);
+					$file = str_replace($this->theme_url(), '', $file);
+					
+					$this->EE->requirejs->add($file, $callback);
 				}
 				else
 				{					
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$file.'"></script>');
 				}
 			}
+		}
+		
+		public function requirejs()
+		{
+			return ($this->requirejs && isset($this->EE->requirejs)) ? TRUE : FALSE;
 		}
 		
 		/**
@@ -221,6 +231,18 @@ if(!class_exists('Theme_loader'))
 				$this->loaded_files[] = $file;
 			
 				$this->EE->cp->add_to_head('<link type="text/css" href="'.$file.'" rel="stylesheet" media="screen" />');
+			}
+		}
+		
+		public function output($js)
+		{
+			if($this->requirejs())
+			{
+				Requirejs::callback($js);
+			}	
+			else
+			{
+				$this->EE->javascript->output($js);
 			}
 		}
 		
